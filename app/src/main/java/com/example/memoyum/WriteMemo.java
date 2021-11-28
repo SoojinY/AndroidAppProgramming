@@ -191,38 +191,43 @@ public class WriteMemo extends AppCompatActivity {
         database.update("memos", cv,"_id=?", new String[]{ID});
 
         c1.close();
-        dbHelper.closeDatabase(dbHelper,database);
 
 
         showMsg(SAVED);
-        if(result){
-            setResult(RESULT_OK, intent);
-            finish();
-        }
+        dbHelper.closeDatabase(dbHelper,database);
+        setResult(RESULT_OK, intent);
+        finish();
+
 
 
     }
 
     // 알림 대화상자
     public void showMsg(int op){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(WriteMemo.this);
         String msg="";
-        builder.setNeutralButton("닫기", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(op==SAVED) result = true;
-            }
-        });
+
         switch (op){
             case ERR_FULLFILLED:
                 msg = "필수 항목을 적어주세요.";
+                builder.setNeutralButton("닫기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
                 break;
             case ERR_UNSAVED:
                 msg = "저장에 실패했습니다.\n다시 시도해주세요";
+                builder.setNeutralButton("닫기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
                 break;
             case SAVED:
                 msg = "저장되었습니다.";
-
                 break;
         }
         builder.setMessage(msg);

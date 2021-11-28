@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     public int makeCardList(int state){
         initDatabase();
         ArrayList<Memo> memoLst = getMemoLst();
-        dbHelper.closeDatabase(dbHelper, database);
+//        dbHelper.closeDatabase(dbHelper, database);
 
         if(memoLst.isEmpty()){
             Toast toast = Toast.makeText(this.getApplicationContext(),"입력된 메모가 없습니다.",Toast.LENGTH_SHORT);
@@ -205,8 +205,10 @@ public class MainActivity extends AppCompatActivity {
         return memoLst;
     }
 
-    public boolean deleteMemo(Memo item){
-        
+    public void deleteMemo(Memo item){
+        int id = item._id;
+        dbHelper.deleteMemo(database, id);
+        makeCardList(ALL);
     }
 
     @Override

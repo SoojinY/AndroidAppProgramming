@@ -54,4 +54,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         dbHelper.close();
     }
 
+    public void deleteMemo(SQLiteDatabase db, int id){
+        db.delete("memos","_id=?", new String[]{String.valueOf(id)});
+        db.delete("alarms","memo=?",new String[]{String.valueOf(id)});
+        db.delete("photos","memo=?",new String[]{String.valueOf(id)});
+    }
 }
