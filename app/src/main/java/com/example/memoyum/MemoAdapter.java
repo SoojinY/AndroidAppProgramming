@@ -12,28 +12,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> implements OnMemoClickListener{
+public class MemoAdapter extends RecyclerView.Adapter<MemoViewHolder>{
     ArrayList<Memo> items = new ArrayList<Memo>();
-    OnMemoClickListener listener;
+
     ////////////////////////////////////////
-    //long click
-    public interface OnItemLongClickEventListener {
-        void onItemLongClick(MemoAdapter.ViewHolder holder, View view, int position);
+    public interface OnItemClickEventListener {
+        void onItemClick(View a_view, int a_position);
     }
-    OnItemLongClickEventListener mItemLongClickListener;
+
+    public interface OnItemLongClickEventListener {
+        void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickEventListener mItemClickListener;
+    private OnItemLongClickEventListener mItemLongClickListener;
     //////////////////////////////////////////////
+
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MemoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.card, parent, false);
 
-        return new ViewHolder(itemView, listener, mItemLongClickListener);
+        return new MemoViewHolder(itemView, mItemClickListener, mItemLongClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MemoAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MemoViewHolder holder, int position) {
         Memo item = items.get(position);
         holder.setItem(item);
     }
@@ -58,80 +64,14 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> im
         items.set(position, item);
     }
 
-    public void setOnItemClickListener(OnMemoClickListener listener) {
-        this.listener = listener;
+    public void setOnItemClickListener(OnItemClickEventListener listener) {
+        this.mItemClickListener = listener;
     }
 
     //long click
-    public void setOnItemLongClickListener(OnItemLongClickEventListener a_listener) { this.mItemLongClickListener = a_listener; }
-
-
-    @Override
-    public void onItemClick(ViewHolder holder, View view, int position) {
-        if (listener != null) {
-            listener.onItemClick(holder, view, position);
-        }
+    public void setOnItemLongClickListener(OnItemLongClickEventListener listener) {
+        this.mItemLongClickListener = listener;
     }
 
 
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView img;
-        Button place;
-        TextView nm;
-        Button visited;
-        TextView tag;
-
-
-        public ViewHolder(View v,
-                          final  OnMemoClickListener listener,
-                          final OnItemLongClickEventListener a_itemLongClickListener) {
-            super(v);
-
-            img = v.findViewById(R.id.cardImg);
-            place = v.findViewById(R.id.cardPlace);
-            nm = v.findViewById(R.id.cardNm);
-            visited = v.findViewById(R.id.cardVisited);
-            tag =v.findViewById(R.id.cardTag);
-
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-
-                    if (listener != null){
-                        listener.onItemClick(ViewHolder.this, v, position);
-                    }
-                }
-            });
-
-            v.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View a_view) {
-                    final int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        a_itemLongClickListener.onItemLongClick(ViewHolder.this, a_view, position);
-                    }
-
-                    return true;
-                }
-            });
-
-        }
-
-
-        public void setItem(Memo memo) {
-            img.setImageResource(R.drawable.rag3);
-            String[] longPlace = memo.place.split(" ");
-            String showPlace = longPlace[1];
-            place.setText(showPlace);
-            nm.setText(memo.name);
-            if(!memo.visited){
-                visited.setVisibility(View.GONE);
-            }
-            String tagList = memo.tagsToString();
-            tag.setText(tagList);
-        }
-
-    }
 }

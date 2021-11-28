@@ -128,25 +128,27 @@ public class MainActivity extends AppCompatActivity {
 
         // 카드 클릭 이벤트
         adapter.setOnItemLongClickListener(new MemoAdapter.OnItemLongClickEventListener() {
-
             @Override
-            public void onItemLongClick(MemoAdapter.ViewHolder holder, View view, int position) {
+            public void onItemLongClick(View view, int position) {
                 final Memo item = adapter.getItem(position);
-                Toast.makeText(MainActivity.this, item.name + " Long click event", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MainActivity.this, WriteMemo.class);
+                startActivity(intent);
             }
         });
 
-//        adapter.setOnItemClickListener(new OnMemoClickListener() {
-//            @Override
-//            public void onItemClick(MemoAdapter.ViewHolder holder, View view, int position) {
-//                Memo item = adapter.getItem(position);
-//
-//                Intent intent = new Intent(MainActivity.this, MemoDetail.class);
-//                intent.putExtra("id",item._id);
-//                intent.putExtra("tag",item.tagsToString());
-//                startActivity(intent);
-//            }
-//        });
+        adapter.setOnItemClickListener(new MemoAdapter.OnItemClickEventListener() {
+            @Override
+            public void onItemClick(View a_view, int a_position) {
+                final Memo item = adapter.getItem(a_position);
+
+                Intent intent = new Intent(MainActivity.this, MemoDetail.class);
+                intent.putExtra("id",item._id);
+                intent.putExtra("tag",item.tagsToString());
+                startActivity(intent);
+            }
+        });
+
         cardLayout.setAdapter(adapter);
 
         return memoLst.size();
