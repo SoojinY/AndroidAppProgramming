@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/goBack"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:translationZ="10dp">
+            <ImageView
+                android:layout_width="43dp"
+                android:layout_height="34dp"
+                android:src="@drawable/nextwhite"
+                android:rotation="-90" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이전"
+                android:textSize="18sp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+
+
+        <ImageView
+            android:id="@+id/foodImg"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/rag1" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </androidx.constraintlayout.widget.Group>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/memoDtTitle"
+            android:clickable="false"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="#B3F0F0F0"
+            app:layout_constraintBottom_toBottomOf="@+id/foodImg" />
+
+        <TextView
+            android:id="@+id/memoDtNm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="라그릴리아"
+            android:textColor="@color/darkGray"
+            android:textSize="24sp"
+            android:translationZ="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/memoDtTitle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/memoDtPlace"
+            android:clickable="false"
+            android:layout_width="50dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/place_tag"
+            android:text="강동구"
+            android:textColor="@color/darkGray"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/memoDtNm"
+            app:layout_constraintTop_toTopOf="@+id/memoDtTitle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/memoDtVisit"
+            android:clickable="false"
+            android:layout_width="43dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_orange1"
+            android:text="방문"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/memoDtTitle"
+            app:layout_constraintTop_toTopOf="@+id/memoDtTitle" />
+
+        <TextView
+            android:id="@+id/memoDtTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="12dp"
+            android:text="#양식 #파스타 #스테이크 #브런치"
+            android:textColor="@color/orange1"
+            android:translationZ="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/memoDtTitle"
+            app:layout_constraintEnd_toEndOf="@id/memoDtTitle" />
+
+        <TextView
+            android:id="@+id/memoDtWriteDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="작성일 2021.11.21"
+            android:textColor="@color/lightGray1"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toStartOf="@id/memoDtEditDate"
+            app:layout_constraintTop_toBottomOf="@id/memoDtTitle" />
+
+        <TextView
+            android:id="@+id/memoDtEditDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="수정일 2021.11.21"
+            android:textColor="@color/lightGray1"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="@id/memoDtTitle"
+            app:layout_constraintTop_toBottomOf="@id/memoDtTitle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/memoDtAlarm"
+            android:clickable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/button_lightgray2"
+            android:paddingHorizontal="30dp"
+            android:text="2021.12.06) 희수이모, 2021.12.13) 엄마"
+            android:textAlignment="viewStart"
+            android:textColor="@color/darkGray1"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/memoDtWriteDate" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="50dp"
+            android:layout_height="41dp"
+            android:layout_marginBottom="-5dp"
+            app:layout_constraintBottom_toTopOf="@id/memoDtAlarm"
+            app:layout_constraintStart_toStartOf="@id/memoDtAlarm"
+            app:srcCompat="@drawable/notice" />
+
+        <TextView
+            android:id="@+id/memoDtContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="25dp"
+            android:text="플랫 그리너리 피자가 맛있다.
+            \n현대 백화점에 있어서 10시 반이면 여는 곳.
+            \n창가 자리 앉으려면 미리 예약 필수!
+            \n\n이제 쿠폰 행사가 끝나서 유효기간 지나기 전까지 열심히 다녀야함...
+            \n\n\n\n\n\n\n\n\nn\n\n\n\n\nn\n\n\n\nn\n\n\n끝!!!!"
+            android:textColor="@color/darkGray1"
+            app:layout_constraintTop_toBottomOf="@id/memoDtAlarm" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toBottomOf="@id/memoDtContent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

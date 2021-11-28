@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:weightSum="1">
+
+<!--        <com.google.android.material.appbar.CollapsingToolbarLayout-->
+<!--            android:id="@+id/toolbar_layout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:fitsSystemWindows="true"-->
+<!--            app:contentScrim="?attr/colorPrimary"-->
+<!--            app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
+<!--            app:toolbarId="@+id/toolbar">-->
+
+<!--            -->
+<!--        </com.google.android.material.appbar.CollapsingToolbarLayout>-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/menuBt"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginHorizontal="10dp"
+                app:srcCompat="@drawable/menu" />
+
+            <ImageView
+                android:layout_width="47dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_marginHorizontal="10dp"
+                app:srcCompat="@drawable/pawprint1" />
+
+            <TextView
+                android:id="@+id/appName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:fontFamily="@font/amiko_bold"
+                android:text="MEMO YUM"
+                android:textColor="@color/white"
+                android:textSize="23sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <include
+        layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addMemoBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:contentDescription="Add Memo"
+        android:elevation="30dp"
+        android:overScrollMode="never"
+        app:srcCompat="@drawable/plus" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

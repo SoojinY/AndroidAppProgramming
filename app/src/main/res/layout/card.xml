@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/memoCard"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_marginBottom="3dp"
+    app:cardBackgroundColor="@color/lightGray2"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="20dp"
+    android:longClickable="true"
+    android:layout_marginTop="15dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cardImg"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/rag1"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp" />
+
+    <LinearLayout
+        android:id="@+id/cardText"
+        android:layout_width="265dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginVertical="13dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.widget.Button
+                android:id="@+id/cardPlace"
+                android:layout_width="45dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/place_tag"
+                android:text="강동구"
+                android:textColor="@color/darkGray"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/cardNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/darkGray"
+                android:text="라그릴리아"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <android.widget.Button
+                android:id="@+id/cardVisited"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/button_orange1"
+                android:clickable="false"
+                android:text="방문"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cardTag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="#양식 #파스타 #스테이크 #브런치"
+            android:textColor="@color/orange1" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

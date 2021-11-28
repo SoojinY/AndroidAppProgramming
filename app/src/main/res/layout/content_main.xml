@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp"
+        tools:ignore="MissingConstraints">
+
+        <RadioGroup
+            android:id="@+id/visitGrp"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="75dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RadioButton
+                android:id="@+id/visitAllBt"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_select"
+                android:textColor="@drawable/button_text_select"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="전체"
+                android:textAlignment="center"
+                android:button="@null"/>
+
+            <RadioButton
+                android:id="@+id/visitNoBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_select"
+                android:textColor="@drawable/button_text_select"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:text="가볼 곳"
+                android:textAlignment="center"
+                android:button="@null"/>
+
+            <RadioButton
+                android:id="@+id/visitYesBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_select"
+                android:textColor="@drawable/button_text_select"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="가본 곳"
+                android:textAlignment="center"
+                android:button="@null"/>
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <android.widget.Button
+                android:id="@+id/searchBt"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_gravity="start"
+                android:background="@drawable/button_orange1"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:paddingVertical="3dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="3dp"
+                android:text="검색"
+                android:textAlignment="viewStart"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/setOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:textSize="12sp"
+                android:text="작성일 순↓"
+                android:textColor="@color/darkGray2"/>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="3dp">
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/cardLayout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"/>-->
+            <LinearLayout
+                android:scrollbars="vertical"
+                android:isScrollContainer="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cardLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
