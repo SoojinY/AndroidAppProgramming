@@ -43,12 +43,17 @@ public class WriteMemo extends AppCompatActivity {
     String contents="";
     Boolean visited=false;
 
+    Intent intent;
+    public static final int RESULT_OK = 200;
+    private boolean result = false;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_memo);
 
-        Intent intent = getIntent();
+        intent = getIntent();
         edit = intent.getBooleanExtra("edit",false);
         if(edit){
             memoId = intent.getIntExtra("id",-1);
@@ -71,7 +76,7 @@ public class WriteMemo extends AppCompatActivity {
         Button backBt = findViewById(R.id.back1);
 
         saveBt.setOnClickListener(v->{saveMemo();});
-        backBt.setOnClickListener(v -> {finish();});
+        backBt.setOnClickListener(v -> {setResult(RESULT_OK, intent);finish();});
 
         initDatabase();
         if(edit){
@@ -103,6 +108,7 @@ public class WriteMemo extends AppCompatActivity {
             Cursor c1 = database.rawQuery(sql1, null);
             c1.moveToNext();
             tag.append(c1.getString(0)).append(", ");
+            c1.close();
         }
         tag.deleteCharAt(tag.length()-1);
         tag.deleteCharAt(tag.length()-1);
@@ -115,6 +121,7 @@ public class WriteMemo extends AppCompatActivity {
         }else{
             visited.setChecked(false);
         }
+        c.close();
 
     }
     // 데이터 베이스 설정
@@ -186,8 +193,14 @@ public class WriteMemo extends AppCompatActivity {
         c1.close();
         dbHelper.closeDatabase(dbHelper,database);
 
+
         showMsg(SAVED);
-        finish();
+        if(result){
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+
     }
 
     // 알림 대화상자
@@ -197,7 +210,7 @@ public class WriteMemo extends AppCompatActivity {
         builder.setNeutralButton("닫기", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                if(op==SAVED) result = true;
             }
         });
         switch (op){
@@ -209,6 +222,7 @@ public class WriteMemo extends AppCompatActivity {
                 break;
             case SAVED:
                 msg = "저장되었습니다.";
+
                 break;
         }
         builder.setMessage(msg);

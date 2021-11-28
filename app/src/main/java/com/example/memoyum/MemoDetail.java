@@ -31,14 +31,20 @@ public class MemoDetail extends AppCompatActivity {
     DatabaseHelper dbHelper;
     SQLiteDatabase database;
 
+    Intent intent;
+    public static final int REQUEST_RETURN = 101;
+    public static final int NO_MATCH_ID = 400;
+    public static final int RESULT_OK = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_detail);
-        Intent intent = getIntent();
+        intent = getIntent();
         memoId = intent.getIntExtra("id",-1);
         hashTags = intent.getStringExtra("tag");
         if(memoId<0){
+            setResult(NO_MATCH_ID, intent);
             finish();
         }
 
@@ -56,8 +62,8 @@ public class MemoDetail extends AppCompatActivity {
         initComponents();
         initDatabase();
         getData();
-
     }
+
     protected void initDatabase(){
         dbHelper = new DatabaseHelper(this);
         try{
@@ -72,6 +78,7 @@ public class MemoDetail extends AppCompatActivity {
         String sql = "SELECT * FROM memos WHERE _id="+memoId+";";
         c = database.rawQuery(sql, null);
         if(c.moveToNext()) setData(c);
+        c.close();
     }
 
     public void setData(Cursor c){
@@ -104,9 +111,20 @@ public class MemoDetail extends AppCompatActivity {
 
     public void goEditMemo(View view){
         Intent intent = new Intent(MemoDetail.this, WriteMemo.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_RETURN);
     }
     public void goBack(View view){
+        setResult(RESULT_OK, intent);
         finish();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_RETURN){
+            initComponents();
+            initDatabase();
+            getData();
+        }
     }
 }

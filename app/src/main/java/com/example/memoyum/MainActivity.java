@@ -1,11 +1,14 @@
 package com.example.memoyum;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private final int NOT_VISITED=1;
     private final int VISITED=2;
 
+    public static final int REQUEST_RETURN = 101;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //레이아웃 지정
@@ -59,11 +64,12 @@ public class MainActivity extends AppCompatActivity {
         makeCardList(ALL);
 
         //뷰 이벤트
+        //햄버거메뉴
         menuBt.setOnClickListener(v -> {});
+        //새메모
         newMemoBt.setOnClickListener(v->{
             Intent intent = new Intent(MainActivity.this, WriteMemo.class);
-            startActivity(intent);
-            makeCardList(ALL);
+            startActivityForResult(intent, REQUEST_RETURN);
         });
         //방문 라디오 버튼
         visitGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -127,16 +133,33 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 카드 클릭 이벤트
+        // 길게 누를 때 (삭제)
         adapter.setOnItemLongClickListener(new MemoAdapter.OnItemLongClickEventListener() {
             @Override
             public void onItemLongClick(View view, int position) {
                 final Memo item = adapter.getItem(position);
 
-                Intent intent = new Intent(MainActivity.this, WriteMemo.class);
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("삭제하시겠습니까?");
+                builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //메모 삭제
+                        deleteMemo(item);
+                    }
+                });
+                builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 취소
+                    }
+                });
+                AppCompatDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
+        // 짧게 누를 때 (상세 조회)
         adapter.setOnItemClickListener(new MemoAdapter.OnItemClickEventListener() {
             @Override
             public void onItemClick(View a_view, int a_position) {
@@ -145,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, MemoDetail.class);
                 intent.putExtra("id",item._id);
                 intent.putExtra("tag",item.tagsToString());
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_RETURN);
             }
         });
 
@@ -182,9 +205,16 @@ public class MainActivity extends AppCompatActivity {
         return memoLst;
     }
 
+    public boolean deleteMemo(Memo item){
+        
+    }
 
-    public void onClickCard(View view){
-        Intent intent = new Intent(MainActivity.this, MemoDetail.class);
-        startActivity(intent);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_RETURN){
+            makeCardList(ALL);
+        }
     }
 }
