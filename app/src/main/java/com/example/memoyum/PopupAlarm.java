@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class PopupAlarm extends Activity {
+public class PopupAlarm extends AppCompatActivity {
     Intent intent;
     int memoId;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.memoyum">
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,6 +30,9 @@
             android:theme="@style/Theme.Memoyum.NoActionBar">
 
         </activity>
+        <activity android:name=".PopupPhoto"
+            android:theme="@style/Theme.AppCompat.Dialog"/>
+
         <activity
             android:name=".PopupAlarm"
             android:theme="@android:style/Theme.Dialog"/>

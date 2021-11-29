@@ -80,6 +80,10 @@ public class WriteMemo extends AppCompatActivity {
 
         saveBt.setOnClickListener(v->{saveMemo();});
         backBt.setOnClickListener(v -> {setResult(RESULT_OK, intent);finish();});
+        popPhoto.setOnClickListener(v-> {
+            Intent i = new Intent(WriteMemo.this, PopupPhoto.class);
+            startActivityForResult(i, REQUEST_RETURN);
+        });
         popAlarm.setOnClickListener(v->{
             Intent i = new Intent(WriteMemo.this, PopupAlarm.class);
             if(edit){
