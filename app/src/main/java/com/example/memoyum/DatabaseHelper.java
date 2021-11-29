@@ -20,8 +20,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS memos(_id INTEGER PRIMARY KEY Autoincrement, nm TEXT, place TEXT, tags TEXT, contents BLOB, visited BOOLEAN, writedt TEXT, editdt TEXT);");
         db.execSQL("CREATE TABLE IF NOT EXISTS tags(_id INTEGER PRIMARY KEY Autoincrement, tagnm TEXT);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS alarms(_id INTEGER PRIMARY KEY Autoincrement, dt DATE, people TEXT, memo INTEGER);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS photos(_id INTEGER PRIMARY KEY Autoincrement, filepath BLOB, memo INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS alarms(_id INTEGER PRIMARY KEY Autoincrement, dt TEXT, nm TEXT, memo_id INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS photos(_id INTEGER PRIMARY KEY Autoincrement, filepath BLOB, memo_id INTEGER);");
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){

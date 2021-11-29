@@ -4,22 +4,27 @@
     android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:paddingVertical="4dp"
+    android:background="@drawable/button_lightgray2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+
+    <EditText
+        android:inputType="text"
         android:id="@+id/alarmNm"
-        android:layout_width="wrap_content"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:text="알람명"
+        android:hint="알람 이름"
         android:textColor="@color/darkGray1"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@id/alarmTime"
+        android:textColorHint="@color/orange2"
+        app:layout_constraintBottom_toTopOf="@id/alarmDt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="7dp"
         android:layout_marginEnd="30dp"/>
+
     <TextView
-        android:id="@+id/alarmTime"
+        android:id="@+id/alarmDt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2021.11.29"

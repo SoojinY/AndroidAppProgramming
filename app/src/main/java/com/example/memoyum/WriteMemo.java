@@ -243,7 +243,7 @@ public class WriteMemo extends AppCompatActivity {
         builder.setMessage(msg);
         AlertDialog dialog = builder.create();
         dialog.show();
-        dialog.dismiss();
+//        dialog.dismiss();
     }
 
     // 데이터 읽기

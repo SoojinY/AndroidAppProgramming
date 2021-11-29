@@ -33,7 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    Asset a = new Asset();
+//    Asset a = new Asset();
     DatabaseHelper dbHelper;
     SQLiteDatabase database;
     RecyclerView cardLayout;
