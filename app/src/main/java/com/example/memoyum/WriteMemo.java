@@ -45,6 +45,7 @@ public class WriteMemo extends AppCompatActivity {
 
     Intent intent;
     public static final int RESULT_OK = 200;
+    public static final int REQUEST_RETURN = 101;
     private boolean result = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -74,9 +75,18 @@ public class WriteMemo extends AppCompatActivity {
         // 베튼
         Button saveBt = findViewById(R.id.saveNew);
         Button backBt = findViewById(R.id.back1);
+        Button popPhoto = findViewById(R.id.popPhoto);
+        Button popAlarm = findViewById(R.id.popAlarm);
 
         saveBt.setOnClickListener(v->{saveMemo();});
         backBt.setOnClickListener(v -> {setResult(RESULT_OK, intent);finish();});
+        popAlarm.setOnClickListener(v->{
+            Intent i = new Intent(WriteMemo.this, PopupAlarm.class);
+            if(edit){
+                i.putExtra("id",memoId);
+            }
+            startActivityForResult(i, REQUEST_RETURN);
+        });
 
         initDatabase();
         if(edit){

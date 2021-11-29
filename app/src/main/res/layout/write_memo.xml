@@ -149,6 +149,7 @@
             android:text="방문" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/popPhoto"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:background="@drawable/button_orange1"
@@ -160,6 +161,7 @@
             android:paddingHorizontal="25dp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/popAlarm"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:background="@drawable/button_orange1"
