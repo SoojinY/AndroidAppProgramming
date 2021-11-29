@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class PopupPhoto extends Activity {
     final int OPEN_GALLERY = 102;
@@ -41,58 +42,65 @@ public class PopupPhoto extends Activity {
         database = dbHelper.getWritableDatabase();
         dbHelper.onCreate(database);
 
+        Button addPhoto = findViewById(R.id.addPhoto);
+        Button photoSave = findViewById(R.id.photoSave);
+        Button photoCancel = findViewById(R.id.photoCancel);
+        photoImg = findViewById(R.id.photoImg);
+
         intent = getIntent();
         //수정인 경우 이미지 불러오기
         photo.memoId = intent.getIntExtra("id", -1);
-        if(photo.memoId>0){
-            String sql = "SELECT * FROM photos WHERE memo_id="+photo.memoId+";";
-            Cursor c = database.rawQuery(sql, null);
-            c.moveToNext();
+        String sql = "SELECT * FROM photos WHERE memo_id=" + photo.memoId + ";";
+        Cursor c = database.rawQuery(sql, null);
+        if(c.moveToNext()){
             photo.filepath = c.getString(c.getColumnIndex("filepath"));
             try {
-                setImageViewFromPath(photo.filepath);
+                setImageViewFromPath();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        Button addPhoto = findViewById(R.id.addPhoto);
-        ImageView photoExit = findViewById(R.id.photoExit);
-        photoImg = findViewById(R.id.photoImg);
 
-        addPhoto.setOnClickListener(v->{
+
+
+        addPhoto.setOnClickListener(v -> {
             Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(i, OPEN_GALLERY);
         });
-        photoExit.setOnClickListener(v->{
+        photoSave.setOnClickListener(v -> {
             //이미지 경로 저장
             savePhoto(photo);
             finish();
         });
+        photoCancel.setOnClickListener(v -> {
+            finish();
+        });
     }
+
     // 이미지 저장
-    public void savePhoto(Photo p){
+    public void savePhoto(Photo p) {
         ContentValues cv = new ContentValues();
 
-        cv.put("filepath",p.filepath);
-        cv.put("memo_id",p.memoId);
+        cv.put("filepath", p.filepath);
+        cv.put("memo_id", p.memoId);
         long row;
         // 새로운 메모인 경우
-        if(p.memoId<0) {
-            row = database.insert("photos",null, cv);
+        if (p.memoId < 0) {
+            row = database.insert("photos", null, cv);
         }
         // 수정인 경우
-        else{
-            database.update("photos", cv,"memo_id=?", new String[]{String.valueOf(p.memoId)});
+        else {
+            database.update("photos", cv, "memo_id=?", new String[]{String.valueOf(p.memoId)});
         }
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case OPEN_GALLERY:
-                if (data != null && resultCode == RESULT_OK)
-                {
+                if (data != null && resultCode == RESULT_OK) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -104,10 +112,12 @@ public class PopupPhoto extends Activity {
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     if (columnIndex < 0) // no column index
-                         return; // DO YOUR ERROR HANDLING
+                        return; // DO YOUR ERROR HANDLING
+
 
                     // 선택한 파일 경로
                     photo.filepath = cursor.getString(columnIndex);
+
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
@@ -122,23 +132,10 @@ public class PopupPhoto extends Activity {
     }
 
     //파일경로로 ImageView setting
-    public void setImageViewFromPath(String path) throws IOException {
-        File imgFile = new File(path);
-        if(imgFile.exists()){
-            Uri img = path2uri(getApplicationContext(),path);
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),img);
-            photoImg.setImageBitmap(bitmap);
-        }
-    }
+    public void setImageViewFromPath() throws IOException {
 
-    //Path(파일경로) -> Uri
-    public static Uri path2uri(Context context, String filePath) {
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, "_data = '" + filePath + "'", null, null);
+        Bitmap bitmap = photo.filepathToBitmap(getApplicationContext());
+        if (bitmap != null) photoImg.setImageBitmap(bitmap);
 
-        cursor.moveToNext();
-        int id = cursor.getInt(cursor.getColumnIndex("_id"));
-        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-        return uri;
     }
 }

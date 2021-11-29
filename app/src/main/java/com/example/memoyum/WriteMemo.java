@@ -56,10 +56,8 @@ public class WriteMemo extends AppCompatActivity {
 
         intent = getIntent();
         edit = intent.getBooleanExtra("edit",false);
-        if(edit){
-            memoId = intent.getIntExtra("id",-1);
-        }
-        
+        memoId = intent.getIntExtra("id",-1);
+
         // 하단 네비게이션 바 숨기기
         decorView = getWindow().getDecorView();
         uiOption = getWindow().getDecorView().getSystemUiVisibility();
@@ -82,13 +80,12 @@ public class WriteMemo extends AppCompatActivity {
         backBt.setOnClickListener(v -> {setResult(RESULT_OK, intent);finish();});
         popPhoto.setOnClickListener(v-> {
             Intent i = new Intent(WriteMemo.this, PopupPhoto.class);
+            i.putExtra("id", memoId);
             startActivityForResult(i, REQUEST_RETURN);
         });
         popAlarm.setOnClickListener(v->{
             Intent i = new Intent(WriteMemo.this, PopupAlarm.class);
-            if(edit){
-                i.putExtra("id",memoId);
-            }
+            i.putExtra("id",memoId);
             startActivityForResult(i, REQUEST_RETURN);
         });
 
@@ -165,13 +162,16 @@ public class WriteMemo extends AppCompatActivity {
         StringBuilder tagStr = new StringBuilder();
 
         if(edit){
-            dbHelper.editMemos(database, memoId,name, place, contents, visited);
+            dbHelper.editMemos(database, memoId, name, place, contents, visited);
+            dbHelper.linkPhotoToMemo(database, memoId);
         }
         else{
-            if(dbHelper.addMemos(database, name, place, contents, visited)<0){
+            int newMemoId = dbHelper.addMemos(database, name, place, contents, visited);
+            if(newMemoId<0){
                 showMsg(ERR_UNSAVED);
                 return;
             }
+            dbHelper.linkPhotoToMemo(database,newMemoId);
         }
 
         String q1 = "nm='"+name+"' and place='"+place+"'";
@@ -203,6 +203,13 @@ public class WriteMemo extends AppCompatActivity {
         }
         cv.put("editdt",date);
         database.update("memos", cv,"_id=?", new String[]{ID});
+
+        // 사진 정보 업데이트
+        ContentValues cv1 = new ContentValues();
+        String photoMemoID = "-1";
+        if(memoId>0) photoMemoID = ID;
+        cv1.put("memo_id",photoMemoID);
+        database.update("photos",cv1,"memo_id=",new String[]{photoMemoID});
 
         c1.close();
 

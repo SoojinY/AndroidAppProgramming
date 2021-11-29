@@ -2,6 +2,7 @@ package com.example.memoyum;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -29,14 +30,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long addMemos(SQLiteDatabase db, String name, String place, String contents, Boolean visited){
+    public int addMemos(SQLiteDatabase db, String name, String place, String contents, Boolean visited){
         ContentValues cv = new ContentValues();
         cv.put("nm",name);
         cv.put("place",place);
         cv.put("contents",contents);
         cv.put("visited", visited);
-        long row = db.insert("memos",null, cv);
-        return row;
+        db.insert("memos",null, cv);
+
+        // get memoId
+        String sql = "SELECT _id FROM memos WHERE nm='"+name+"' AND place='"+place+"';";
+        Cursor c = db.rawQuery(sql,null);
+        c.moveToNext();
+        int memoId = -1;
+        try{
+            memoId = c.getInt(c.getColumnIndex("_id"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return memoId;
     }
 
     public void editMemos(SQLiteDatabase db, int id, String name, String place, String contents, Boolean visited){
@@ -58,5 +71,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete("memos","_id=?", new String[]{String.valueOf(id)});
         db.delete("alarms","memo=?",new String[]{String.valueOf(id)});
         db.delete("photos","memo=?",new String[]{String.valueOf(id)});
+    }
+
+    public void linkPhotoToMemo(SQLiteDatabase db, int memoId){
+        ContentValues cv = new ContentValues();
+        cv.put("memo_id",memoId);
+        db.update("photos",cv,"memo_id<?",new String[]{String.valueOf(0)});
+    }
+    public void canclePhotoSave(SQLiteDatabase db){
+        db.delete("photos","memo_id<?",new String[]{String.valueOf(0)});
     }
 }

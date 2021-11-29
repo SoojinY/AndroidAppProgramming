@@ -1,19 +1,27 @@
 package com.example.memoyum;
 
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
+
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.telecom.TelecomManager;
@@ -30,6 +38,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private final int VISITED=2;
 
     public static final int REQUEST_RETURN = 101;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 카드 리스트 생성
-        makeCardList(ALL);
+        try {
+            makeCardList(ALL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //뷰 이벤트
         //햄버거메뉴
@@ -87,7 +101,11 @@ public class MainActivity extends AppCompatActivity {
                         state = VISITED;
                         break;
                 }
-                makeCardList(state);
+                try {
+                    makeCardList(state);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -102,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int makeCardList(int state){
+    public int makeCardList(int state) throws IOException {
         initDatabase();
         ArrayList<Memo> memoLst = getMemoLst();
 //        dbHelper.closeDatabase(dbHelper, database);
@@ -118,6 +136,16 @@ public class MainActivity extends AppCompatActivity {
         cardLayout.setLayoutManager(manager);
 
         for(Memo m : memoLst){
+
+            String sql = "SELECT filepath FROM photos WHERE memo_id="+m._id+";";
+            Cursor c = database.rawQuery(sql,null);
+            c.moveToNext();
+            String path = c.getString(c.getColumnIndex("filepath"));
+            Photo p = new Photo();
+            p.memoId = m._id;
+            p.filepath = path;
+            m.img = p.filepathToBitmap(getApplicationContext());
+
             switch (state){
                 case ALL:
                     adapter.addItem(m);
@@ -145,7 +173,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //메모 삭제
-                        deleteMemo(item);
+                        try {
+                            deleteMemo(item);
+                            deletePhoto(item);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -177,6 +210,11 @@ public class MainActivity extends AppCompatActivity {
         return memoLst.size();
     }
 
+    private void deletePhoto(Memo item) {
+        int id = item._id;
+        database.delete("photos","memo_id=?",new String[]{String.valueOf(id)});
+    }
+
     public ArrayList<Memo> getMemoLst(){
         ArrayList<Memo> memoLst= new ArrayList<Memo>();
         Cursor c;
@@ -205,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         return memoLst;
     }
 
-    public void deleteMemo(Memo item){
+    public void deleteMemo(Memo item) throws IOException {
         int id = item._id;
         dbHelper.deleteMemo(database, id);
         makeCardList(ALL);
@@ -216,7 +254,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == REQUEST_RETURN){
-            makeCardList(ALL);
+            try {
+                makeCardList(ALL);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

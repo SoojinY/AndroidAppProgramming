@@ -51,7 +51,12 @@ public class MemoViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setItem(Memo memo) {
-        img.setImageResource(R.drawable.rag3);
+        if(memo.img != null){
+            img.setImageBitmap(memo.img);
+        }
+        else{
+            img.setImageResource(R.drawable.noimage);
+        }
         String[] longPlace = memo.place.split(" ");
         String showPlace = longPlace[1];
         place.setText(showPlace);

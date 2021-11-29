@@ -11,27 +11,19 @@
         android:id="@+id/photoTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:translationZ="10dp"
         android:text="사진 선택"
-        android:textColor="@color/orange2"
+        android:textColor="@color/white"
         android:textSize="19sp"
-        app:layout_constraintBottom_toTopOf="@+id/photoImg"
+        app:layout_constraintTop_toTopOf="@id/photoBar"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="@id/photoBar"
         android:layout_marginStart="30dp"/>
 
-    <ImageView
-        android:id="@+id/photoExit"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/plus"
-        android:rotation="45"
-        android:translationZ="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="5dp"/>
     <android.widget.Button
+        android:id="@+id/photoBar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@color/orange2"
         android:clickable="false"/>
 
@@ -43,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/addPhoto"
-        android:layout_marginBottom="50dp" />
+        android:layout_marginBottom="40dp" />
 
     <android.widget.Button
         android:id="@+id/addPhoto"
@@ -56,11 +48,31 @@
         android:textSize="15sp"
         android:textAlignment="center"
         android:paddingHorizontal="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/photoCancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <android.widget.Button
+        android:id="@+id/photoCancel"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@color/lightGray1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="취소"
+        android:textSize="19sp"
+        android:textColor="@color/white"/>
 
+    <android.widget.Button
+        android:id="@+id/photoSave"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@color/orange2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="저장"
+        android:textSize="19sp"
+        android:textColor="@color/white"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

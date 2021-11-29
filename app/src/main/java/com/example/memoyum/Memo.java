@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class Memo {
     boolean visited;
     String writedt;
     String editdt;
+
+    Bitmap img;
 
     final String[] colNm = {
             "_id",

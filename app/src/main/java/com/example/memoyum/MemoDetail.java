@@ -16,6 +16,8 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+
 public class MemoDetail extends AppCompatActivity {
     int memoId;
     String hashTags;
@@ -61,7 +63,11 @@ public class MemoDetail extends AppCompatActivity {
 
         initComponents();
         initDatabase();
-        getData();
+        try {
+            getData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void initDatabase(){
@@ -73,15 +79,26 @@ public class MemoDetail extends AppCompatActivity {
         }
     }
 
-    public void getData(){
+    public void getData() throws IOException {
         Cursor c;
+        //메모 정보
         String sql = "SELECT * FROM memos WHERE _id="+memoId+";";
         c = database.rawQuery(sql, null);
-        if(c.moveToNext()) setData(c);
+        if(c.moveToNext()) setMemoData(c);
+
+        //이미지 정보
+        sql = "SELECT filepath FROM photos WHERE memo_id="+memoId+";";
+        c = database.rawQuery(sql, null);
+        if(c.moveToNext()) {
+            Photo p = new Photo();
+            p.filepath = c.getString(0);
+            p.memoId = memoId;
+            img.setImageBitmap(p.filepathToBitmap(getApplicationContext()));
+        }
         c.close();
     }
 
-    public void setData(Cursor c){
+    public void setMemoData(Cursor c){
         int i = 1;
         nm.setText(c.getString(i++));
         String longPlace = c.getString(i++);
@@ -124,7 +141,11 @@ public class MemoDetail extends AppCompatActivity {
         if (requestCode == REQUEST_RETURN){
             initComponents();
             initDatabase();
-            getData();
+            try {
+                getData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
