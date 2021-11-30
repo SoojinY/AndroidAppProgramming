@@ -139,12 +139,14 @@ public class MainActivity extends AppCompatActivity {
 
             String sql = "SELECT filepath FROM photos WHERE memo_id="+m._id+";";
             Cursor c = database.rawQuery(sql,null);
-            c.moveToNext();
-            String path = c.getString(c.getColumnIndex("filepath"));
-            Photo p = new Photo();
-            p.memoId = m._id;
-            p.filepath = path;
-            m.img = p.filepathToBitmap(getApplicationContext());
+            if(c.moveToNext()){
+                String path = c.getString(c.getColumnIndex("filepath"));
+                Photo p = new Photo();
+                p.memoId = m._id;
+                p.filepath = path;
+                m.img = p.filepathToBitmap(getApplicationContext());
+            }
+
 
             switch (state){
                 case ALL:

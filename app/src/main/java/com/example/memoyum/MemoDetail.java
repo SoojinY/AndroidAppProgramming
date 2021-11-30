@@ -57,7 +57,7 @@ public class MemoDetail extends AppCompatActivity {
             Intent i = new Intent(MemoDetail.this, WriteMemo.class);
             i.putExtra("id", memoId);
             i.putExtra("edit",true);
-            startActivity(i);
+            startActivityForResult(i,REQUEST_RETURN);
         });
         backBt.setOnClickListener(v -> {finish();});
 
@@ -139,13 +139,16 @@ public class MemoDetail extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == REQUEST_RETURN){
-            initComponents();
-            initDatabase();
-            try {
-                getData();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(resultCode == RESULT_OK){
+                initComponents();
+                initDatabase();
+                try {
+                    getData();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
     }
 }

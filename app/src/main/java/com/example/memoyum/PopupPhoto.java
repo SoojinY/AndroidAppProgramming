@@ -30,6 +30,8 @@ public class PopupPhoto extends Activity {
     Photo photo;
     ImageView photoImg;
 
+    public static final int PHOTO_SAVED = 201;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +73,7 @@ public class PopupPhoto extends Activity {
         photoSave.setOnClickListener(v -> {
             //이미지 경로 저장
             savePhoto(photo);
+            setResult(PHOTO_SAVED, intent);
             finish();
         });
         photoCancel.setOnClickListener(v -> {
@@ -80,18 +83,30 @@ public class PopupPhoto extends Activity {
 
     // 이미지 저장
     public void savePhoto(Photo p) {
+        if(p.filepath==null || p.filepath.isEmpty()) return;
+
         ContentValues cv = new ContentValues();
 
         cv.put("filepath", p.filepath);
         cv.put("memo_id", p.memoId);
-        long row;
+
         // 새로운 메모인 경우
         if (p.memoId < 0) {
-            row = database.insert("photos", null, cv);
+            database.insert("photos", null, cv);
         }
         // 수정인 경우
         else {
-            database.update("photos", cv, "memo_id=?", new String[]{String.valueOf(p.memoId)});
+
+            String sql = "SELECT * FROM photos WHERE memo_id="+ p.memoId+";";
+            Cursor c = database.rawQuery(sql,null);
+            if(c.moveToNext()){
+                database.update("photos", cv, "memo_id=?", new String[]{String.valueOf(p.memoId)});
+            }
+            else{
+                // 사진이 없는 메모에 사진 추가
+                database.insert("photos",null, cv);
+            }
+
         }
     }
 

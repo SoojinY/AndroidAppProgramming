@@ -36,6 +36,8 @@ public class WriteMemo extends AppCompatActivity {
 
     int memoId;
     boolean edit;
+    boolean photoSaved=false;
+    boolean alarmSaved=false;
 
     String name="";
     String place="";
@@ -46,6 +48,8 @@ public class WriteMemo extends AppCompatActivity {
     Intent intent;
     public static final int RESULT_OK = 200;
     public static final int REQUEST_RETURN = 101;
+    public static final int PHOTO_SAVED = 201;
+    public static final int ALARM_SAVED = 202;
     private boolean result = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -94,6 +98,22 @@ public class WriteMemo extends AppCompatActivity {
             setEdit();
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+        if(requestCode == REQUEST_RETURN){
+            switch(resultCode){
+                case PHOTO_SAVED:
+                    photoSaved = true;
+                    break;
+
+                case ALARM_SAVED:
+                    alarmSaved = true;
+                    break;
+
+            }
+        }
+    }
     public void setEdit(){
         EditText name = findViewById(R.id.name);
         EditText place = findViewById(R.id.place);
@@ -114,16 +134,21 @@ public class WriteMemo extends AppCompatActivity {
 
         StringBuilder tag = new StringBuilder();
         String[] tagIds = (c.getString(i++)).split(",");
+
         for(String s : tagIds){
+            if(s.isEmpty()) continue;
+
             String sql1 = "SELECT tagnm FROM tags WHERE _id="+s+";";
             Cursor c1 = database.rawQuery(sql1, null);
             c1.moveToNext();
             tag.append(c1.getString(0)).append(", ");
             c1.close();
         }
-        tag.deleteCharAt(tag.length()-1);
-        tag.deleteCharAt(tag.length()-1);
-        tags.setText(tag.toString());
+        if(tag.length()>1){
+            tag.deleteCharAt(tag.length()-1);
+            tag.deleteCharAt(tag.length()-1);
+            tags.setText(tag.toString());
+        }
 
         contents.setText(c.getString(i++));
 
@@ -207,9 +232,27 @@ public class WriteMemo extends AppCompatActivity {
         // 사진 정보 업데이트
         ContentValues cv1 = new ContentValues();
         String photoMemoID = "-1";
-        if(memoId>0) photoMemoID = ID;
-        cv1.put("memo_id",photoMemoID);
-        database.update("photos",cv1,"memo_id=",new String[]{photoMemoID});
+        cv1.put("memo_id",ID);
+        if(photoSaved){
+
+            q1 = "SELECT * FROM photos WHERE memo_id="+ID+" OR memo_id=-1";
+            c1 = database.rawQuery(q1, null);
+            if(c1.moveToNext()){
+                // 이미지가 db에 있는 경우
+                database.update("photos",cv1,"memo_id=?",new String[]{ID});
+            }
+            else{
+                // 이미지가 db에 없는 경우
+//                q1 = "SELECT * FROM photos WHERE memo_id=-1"";
+//                c1 = database.rawQuery(q1, null);
+//                if(c1.moveToNext()){
+//                    database.update("photos",cv1,"memo_id=?",new String[]{ID});
+//                }
+                database.insert("photos",null,cv1);
+            }
+
+        }
+
 
         c1.close();
 
@@ -218,8 +261,6 @@ public class WriteMemo extends AppCompatActivity {
         dbHelper.closeDatabase(dbHelper,database);
         setResult(RESULT_OK, intent);
         finish();
-
-
 
     }
 
