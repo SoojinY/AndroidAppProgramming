@@ -40,7 +40,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase database;
     RecyclerView cardLayout;
     MemoAdapter adapter;
+
+    ArrayList<Memo> memoLst;
+
+    String searchWords;
+    String[] searchTags;
+    String[] searchPlace;
 
     private final int ALL = 0;
     private final int NOT_VISITED=1;
@@ -66,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         //레이아웃 지정
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initDatabase();
 
 
         //뷰
@@ -75,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
         cardLayout = findViewById(R.id.cardLayout);
         Button searchBt = findViewById(R.id.searchBt);
 
-
+        //메모리스트 전역
+        memoLst = getMemoLst("SELECT * FROM memos;");
 
         // 카드 리스트 생성
         try {
@@ -133,9 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int makeCardList(int state) throws IOException {
-        initDatabase();
-        ArrayList<Memo> memoLst = getMemoLst();
-//        dbHelper.closeDatabase(dbHelper, database);
+//        ArrayList<Memo> memoLst = getMemoLst();
 
         if(memoLst.isEmpty()){
             Toast toast = Toast.makeText(this.getApplicationContext(),"입력된 메모가 없습니다.",Toast.LENGTH_SHORT);
@@ -158,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
                 p.filepath = path;
                 m.img = p.filepathToBitmap(getApplicationContext());
             }
-
 
             switch (state){
                 case ALL:
@@ -229,11 +237,10 @@ public class MainActivity extends AppCompatActivity {
         database.delete("photos","memo_id=?",new String[]{String.valueOf(id)});
     }
 
-    public ArrayList<Memo> getMemoLst(){
-        ArrayList<Memo> memoLst= new ArrayList<Memo>();
-        Cursor c;
-        String sql = "SELECT * FROM memos;";
-        c = database.rawQuery(sql, null);
+    public ArrayList<Memo> getMemoLst(String sql){
+        ArrayList<Memo> _memoLst = new ArrayList<Memo>();
+
+        Cursor c = database.rawQuery(sql, null);
 
         while(c.moveToNext()){
             Memo m = new Memo();
@@ -251,10 +258,10 @@ public class MainActivity extends AppCompatActivity {
             }
             m.writedt = c.getString(j++);
             m.editdt = c.getString(j);
-            memoLst.add(m);
+            _memoLst.add(m);
         }
         c.close();
-        return memoLst;
+        return _memoLst;
     }
 
     public void deleteMemo(Memo item) throws IOException {
@@ -279,9 +286,9 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_SEARCH:
                 // 검색
                 if(resultCode==RETURN_SEARCH){
-                    String searchWords = intent.getStringExtra("words");
-                    String[] searchTags = intent.getStringArrayExtra("tags");
-                    String[] searchPlace = intent.getStringArrayExtra("place");
+                    searchWords = intent.getStringExtra("words");
+                    searchTags = intent.getStringArrayExtra("tags");
+                    searchPlace = intent.getStringArrayExtra("place");
 
                     //Tag: string -> int code
                     ArrayList<Integer> tagCdLst = new ArrayList<Integer>();
@@ -296,12 +303,13 @@ public class MainActivity extends AppCompatActivity {
                     TreeSet<Integer> tagCdSet = new TreeSet<Integer>(tagCdLst);
 
                     sql = new StringBuilder("SELECT * FROM memos WHERE ");
-                    if(searchWords!=null || !searchWords.isEmpty()) {
+                    if(!Objects.requireNonNull(searchWords).isEmpty()) {
                         sql.append("nm like '%").append(searchWords).append("%' OR contents like '%").append(searchWords).append("%' ");
                         if(searchPlace.length>0){
                             sql.append("AND ");
                         }
                     }
+                    sql.delete(sql.length()-4,sql.length()-1);
 //                    for(String place:searchPlace){
 //                        if(place.isEmpty()){
 //                            continue;
@@ -314,7 +322,13 @@ public class MainActivity extends AppCompatActivity {
 //                    for(Integer tag:tagCdSet){
 //                        sql.append("tags like '")
 //                    }
-                    c = database.rawQuery(sql.toString(),null);
+                    memoLst = getMemoLst(sql.toString());
+                    try {
+                        makeCardList(ALL);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 break;
         }

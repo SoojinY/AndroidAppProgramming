@@ -104,21 +104,22 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="3dp">
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/cardLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"/>-->
+            android:layout_marginBottom="5dp">
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/cardLayout"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"/>-->
             <LinearLayout
-                android:scrollbars="vertical"
-                android:isScrollContainer="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:isScrollContainer="true"
+                android:orientation="vertical"
+                android:scrollbars="vertical">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/cardLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
         </ScrollView>
