@@ -32,6 +32,9 @@
             android:theme="@style/Theme.Memoyum.NoActionBar">
 
         </activity>
+        <activity android:name=".PopupSearch"
+            android:theme="@style/Theme.AppCompat.Dialog"/>
+
         <activity android:name=".PopupPhoto"
             android:theme="@style/Theme.AppCompat.Dialog"/>
 

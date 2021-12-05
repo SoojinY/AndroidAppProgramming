@@ -40,6 +40,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 //    Asset a = new Asset();
@@ -53,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private final int VISITED=2;
 
     public static final int REQUEST_RETURN = 101;
+    public static final int REQUEST_SEARCH = 102;
+
+    public static final int PHOTO_SAVED = 201;
+    public static final int RETURN_SEARCH = 202;
 
 
     @Override
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton newMemoBt = (FloatingActionButton) findViewById(R.id.addMemoBt);
         RadioGroup visitGrp = findViewById(R.id.visitGrp);
         cardLayout = findViewById(R.id.cardLayout);
+        Button searchBt = findViewById(R.id.searchBt);
 
 
 
@@ -78,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //뷰 이벤트
+        //검색버튼
+        searchBt.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this, PopupSearch.class);
+            startActivityForResult(i,REQUEST_SEARCH);
+        });
         //햄버거메뉴
         menuBt.setOnClickListener(v -> {});
         //새메모
@@ -255,12 +267,57 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (requestCode == REQUEST_RETURN){
-            try {
-                makeCardList(ALL);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        switch (requestCode){
+            case REQUEST_RETURN:
+                try {
+                    makeCardList(ALL);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case REQUEST_SEARCH:
+                // 검색
+                if(resultCode==RETURN_SEARCH){
+                    String searchWords = intent.getStringExtra("words");
+                    String[] searchTags = intent.getStringArrayExtra("tags");
+                    String[] searchPlace = intent.getStringArrayExtra("place");
+
+                    //Tag: string -> int code
+                    ArrayList<Integer> tagCdLst = new ArrayList<Integer>();
+                    Cursor c;
+                    StringBuilder sql = new StringBuilder("SELECT _id FROM tags WHERE tagnm like '%");
+                    for(String s: searchTags){
+                        c = database.rawQuery(sql.toString()+s+"%';",null);
+                        while(c.moveToNext()){
+                            tagCdLst.add(c.getInt(0));
+                        }
+                    }
+                    TreeSet<Integer> tagCdSet = new TreeSet<Integer>(tagCdLst);
+
+                    sql = new StringBuilder("SELECT * FROM memos WHERE ");
+                    if(searchWords!=null || !searchWords.isEmpty()) {
+                        sql.append("nm like '%").append(searchWords).append("%' OR contents like '%").append(searchWords).append("%' ");
+                        if(searchPlace.length>0){
+                            sql.append("AND ");
+                        }
+                    }
+//                    for(String place:searchPlace){
+//                        if(place.isEmpty()){
+//                            continue;
+//                        }
+//                        sql.append("place like '%").append(place).append("%' AND ");
+//                    }
+//                    if(searchPlace.length>0 && tagCdSet.isEmpty()){
+//                        sql.delete(sql.length()-4,sql.length());
+//                    }
+//                    for(Integer tag:tagCdSet){
+//                        sql.append("tags like '")
+//                    }
+                    c = database.rawQuery(sql.toString(),null);
+                }
+                break;
         }
+
     }
 }

@@ -206,6 +206,7 @@ public class WriteMemo extends AppCompatActivity {
         String ID = c1.getString(0);
 
         for (String s : tagArr) {
+            if(s.isEmpty()) { continue;}
             // 중복되지 않게 태그 저장
             ContentValues cv = new ContentValues();
             cv.put("tagnm", s);
@@ -234,20 +235,15 @@ public class WriteMemo extends AppCompatActivity {
         String photoMemoID = "-1";
         cv1.put("memo_id",ID);
         if(photoSaved){
-
             q1 = "SELECT * FROM photos WHERE memo_id="+ID+" OR memo_id=-1";
             c1 = database.rawQuery(q1, null);
+
             if(c1.moveToNext()){
                 // 이미지가 db에 있는 경우
                 database.update("photos",cv1,"memo_id=?",new String[]{ID});
             }
             else{
                 // 이미지가 db에 없는 경우
-//                q1 = "SELECT * FROM photos WHERE memo_id=-1"";
-//                c1 = database.rawQuery(q1, null);
-//                if(c1.moveToNext()){
-//                    database.update("photos",cv1,"memo_id=?",new String[]{ID});
-//                }
                 database.insert("photos",null,cv1);
             }
 
